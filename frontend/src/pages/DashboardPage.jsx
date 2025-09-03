@@ -37,7 +37,7 @@ export default function DashboardPage() {
           <Link to="/dashboard" className="flex items-center space-x-2 font-semibold" style={{ color: "#006a9a" }}>
             <span>🏠</span> <span>Dashboard</span>
           </Link>
-          <Link to="#" className="flex items-center space-x-2 hover:underline" style={{ color: "#006a9a" }}>
+          <Link to="/petitions" className="flex items-center space-x-2 hover:underline" style={{ color: "#006a9a" }}>
             <span>📄</span> <span>Petitions</span>
           </Link>
           <Link to="#" className="flex items-center space-x-2 hover:underline" style={{ color: "#006a9a" }}>
@@ -54,7 +54,7 @@ export default function DashboardPage() {
         <header className="flex justify-between items-center px-6 py-4 text-white" style={{ backgroundColor: "#006a9a" }}>
           <nav className="space-x-6">
             <Link to="/dashboard" className="hover:underline text-white">Home</Link>
-            <Link to="#" className="hover:underline text-white">Petitions</Link>
+            <Link to="/petitions" className="hover:underline text-white">Petitions</Link>
             <Link to="#" className="hover:underline text-white">Polls</Link>
             <Link to="#" className="hover:underline text-white">Reports</Link>
           </nav>

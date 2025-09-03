@@ -8,12 +8,12 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState("login"); 
+  const [step, setStep] = useState("login"); // "login", "forgot", "verifyOtp"
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const navigate = useNavigate();
 
-  
+  // --- Normal Login ---
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
@@ -43,7 +43,7 @@ export default function LoginPage() {
     }
   };
 
- 
+  // --- Forgot Password: Send OTP ---
   const handleSendOtp = async () => {
     setError("");
     setMessage("");
@@ -52,7 +52,7 @@ export default function LoginPage() {
       const res = await fetch("http://localhost:5000/api/auth/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }), 
+        body: JSON.stringify({ email }), // already typed in login
       });
       const data = await res.json();
       if (!res.ok) {
@@ -68,7 +68,7 @@ export default function LoginPage() {
     }
   };
 
- 
+  // --- Verify OTP + Reset Password ---
   const handleResetPassword = async (e) => {
     e.preventDefault();
     setError("");
@@ -124,7 +124,7 @@ export default function LoginPage() {
             </Link>
           </div>
 
-        
+          {/* LOGIN FORM */}
           {step === "login" && (
             <form onSubmit={handleLogin}>
               <input
@@ -153,7 +153,7 @@ export default function LoginPage() {
                 style={{ backgroundColor: "#006a9a" }}
                 disabled={loading}
               >
-                {loading ? "Logging in..." : "Login"}
+                {loading ? "Loading..." : "Login"}
               </button>
 
               <p
@@ -166,7 +166,7 @@ export default function LoginPage() {
             </form>
           )}
 
-         
+          {/* OTP VERIFY FORM */}
           {step === "verifyOtp" && (
             <form onSubmit={handleResetPassword}>
               <input
