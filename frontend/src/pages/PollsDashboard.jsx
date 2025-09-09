@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function PollsDashboard() {
+export default function PollsDashboard({ user }) {
   const [activeTab, setActiveTab] = useState("active");
   const [polls, setPolls] = useState([]);
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch all polls from backend
     fetch("http://localhost:5000/api/polls")
       .then((res) => res.json())
       .then((data) => setPolls(data))
@@ -22,81 +23,141 @@ export default function PollsDashboard() {
   });
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-md p-4">
-        <h2 className="font-bold text-xl mb-6">Civix</h2>
-        <nav className="space-y-4">
-          <a href="/dashboard" className="block">Dashboard</a>
-          <a href="/petitions" className="block">Petitions</a>
-          <a href="/polls" className="block font-bold text-blue-600">Polls</a>
-          <a href="/officials" className="block">Officials</a>
-          <a href="/reports" className="block">Reports</a>
-          <a href="/settings" className="block">Settings</a>
-          <a href="/help" className="block">Help & Support</a>
+    <section className="flex min-h-screen bg-gray-100">
+   
+      <aside className="w-64 bg-[#006699] text-white flex flex-col p-4 space-y-4">
+        <h1 className="text-2xl font-bold mb-6">Civix</h1>
+        <nav className="flex flex-col space-y-3">
+          <Link to="/dashboard" className="flex items-center space-x-2 p-2 rounded-lg hover:bg-[#00557a]">
+            <span>🏠</span>
+            <span>Dashboard</span>
+          </Link>
+          <Link to="/petitions" className="flex items-center space-x-2 p-2 rounded-lg hover:bg-[#00557a]">
+            <span>📄</span>
+            <span>Petitions</span>
+          </Link>
+          <Link to="/polls" className="flex items-center space-x-2 p-2 rounded-lg bg-white text-[#006699] font-semibold">
+            <span>📊</span>
+            <span>Polls</span>
+          </Link>
+          <Link to="/reports" className="flex items-center space-x-2 p-2 rounded-lg hover:bg-[#00557a]">
+            <span>📑</span>
+            <span>Reports</span>
+          </Link>
+          <Link to="/settings" className="flex items-center space-x-2 p-2 rounded-lg hover:bg-[#00557a]">
+            <span>⚙️</span>
+            <span>Settings</span>
+          </Link>
+          <Link to="/help" className="flex items-center space-x-2 p-2 rounded-lg hover:bg-[#00557a]">
+            <span>❓</span>
+            <span>Help & Support</span>
+          </Link>
         </nav>
       </aside>
 
-      {/* Main */}
-      <main className="flex-1 p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Polls</h2>
-          <button
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg"
-            style={{ backgroundColor: "#006a9a" }}
-          >
-            + Create Poll
-          </button>
-        </div>
+      <section className="flex-1 flex flex-col">
+     
+        <header className="bg-[#006699] text-white flex justify-between items-center px-6 py-3">
+          <nav className="flex-1 flex justify-center space-x-6 text-lg">
+            <Link to="/dashboard" className="hover:underline">Home</Link>
+            <Link to="/petitions" className="hover:underline">Petitions</Link>
+            <Link to="/polls" className="hover:underline">Polls</Link>
+            <Link to="/reports" className="hover:underline">Reports</Link>
+          </nav>
+          <section className="flex items-center space-x-2">
+            <span className="bg-white text-[#006699] rounded-full w-10 h-10 flex items-center justify-center font-bold">
+              {user?.name?.charAt(0).toUpperCase() || "U"}
+            </span>
+          </section>
+        </header>
 
-        {/* Tabs */}
-        <div className="flex space-x-4 mb-4">
-          {["active", "voted", "my", "closed"].map((tab) => (
+     
+        <section className="flex-1 p-8">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold">Polls</h2>
             <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-4 py-2 rounded-full ${
-                activeTab === tab
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-200 text-gray-700"
-              }`}
+              onClick={() => navigate("/poll-creation")}
+              className="bg-[#006699] text-white px-4 py-2 rounded-lg hover:bg-[#00557a]"
             >
-              {tab === "active" && "Active Polls"}
-              {tab === "voted" && "Polls I Voted On"}
-              {tab === "my" && "My Polls"}
-              {tab === "closed" && "Closed Polls"}
+              + Create Poll
             </button>
-          ))}
-        </div>
+          </div>
 
-        {/* Search */}
-        <div className="mb-4">
-          <input
-            type="text"
-            placeholder="Search polls..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="border px-4 py-2 rounded-lg w-full"
-          />
-        </div>
-
-        {/* Polls List */}
-        {filteredPolls.length > 0 ? (
-          <div className="space-y-4">
-            {filteredPolls.map((poll) => (
-              <div
-                key={poll.id}
-                className="bg-white p-4 rounded-lg shadow-md border"
+        
+          <div className="flex space-x-4 mb-4">
+            {["active", "voted", "my", "closed"].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-4 py-2 rounded-full ${
+                  activeTab === tab
+                    ? "bg-[#006699] text-white"
+                    : "bg-gray-200 text-gray-700"
+                }`}
               >
-                <h3 className="font-bold">{poll.title}</h3>
-                <p className="text-gray-600 text-sm">{poll.description}</p>
-                <div className="flex justify-between items-center mt-2">
-                  <span className="text-xs text-gray-500">
-                    Posted: {poll.date}
-                  </span>
-                  {poll.isActive && (
-                    <button
-                      className="text-blue-600 font-semibold"
-                      onClick={() => alert("Vote feature here")}
-                    >
-                      Vote
+                {tab === "active" && "Active Polls"}
+                {tab === "voted" && "Polls I Voted On"}
+                {tab === "my" && "My Polls"}
+                {tab === "closed" && "Closed Polls"}
+              </button>
+            ))}
+          </div>
+
+      
+          <div className="mb-4">
+            <input
+              type="text"
+              placeholder="Search polls..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="border px-4 py-2 rounded-lg w-full"
+            />
+          </div>
+
+        
+          {filteredPolls.length > 0 ? (
+            <div className="space-y-4">
+              {filteredPolls.map((poll) => (
+                <div
+                  key={poll.id}
+                  className="bg-white p-4 rounded-lg shadow-md border"
+                >
+                  <h3 className="font-bold">{poll.title}</h3>
+                  <p className="text-gray-600 text-sm">{poll.description}</p>
+                  <div className="flex justify-between items-center mt-2">
+                    <span className="text-xs text-gray-500">
+                      Posted: {poll.date}
+                    </span>
+                    {poll.isActive && (
+                      <button
+                        className="text-[#006699] font-semibold"
+                        onClick={() => alert("Vote feature here")}
+                      >
+                        Vote
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-gray-500 mt-6">
+              No polls found with current filters
+            </p>
+          )}
+        </section>
+
+        <footer className="bg-[#006699] text-white text-center p-3">
+          <p>© 2025 Civix. All rights reserved.</p>
+          <section className="flex justify-center space-x-6 mt-2">
+            <Link to="/about">About Us</Link>
+            <Link to="/services">Services</Link>
+            <Link to="/contact">Contact</Link>
+            <Link to="/support">Support</Link>
+            <Link to="/privacy">Privacy Policy</Link>
+          </section>
+        </footer>
+      </section>
+    </section>
+  );
+}
